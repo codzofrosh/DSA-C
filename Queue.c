@@ -41,16 +41,21 @@ void enqueue(struct queue *QueueInstance){
     }while(choice=='y'||choice=='Y');
 }
 void dequeue(struct queue *QueueInstance){
-    if(QueueInstance->rear == NULL){
-        printf("Queue Empty\n");
-        return;
+    char choice;
+    do{
+        if(QueueInstance->rear == NULL){
+            printf("Queue Empty\n");
+            return;
+        }
+        struct node *current = QueueInstance->front;
+        int dequeuedElement = current->data;
+        printf("Dequeued Element %d\n",dequeuedElement);
+        QueueInstance->front = QueueInstance->front->next;
+        free(current);
+        printf("do u want to dequeue another element\n");
+        while(getchar()!='\n');
+        scanf("%c",&choice);
     }
-    struct node *current = QueueInstance->front;
-    int dequeuedElement = current->data;
-    printf("Dequeued Element %d\n",dequeuedElement);
-    QueueInstance->front = QueueInstance->front->next;
-    free(current);
-    return;
 }
 void printQueue(struct queue *QueueInstance){
     struct node *current = QueueInstance->front;
