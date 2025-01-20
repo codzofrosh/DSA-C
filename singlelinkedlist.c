@@ -9,65 +9,53 @@ struct node {
 struct node *head = NULL;
 struct node *prev = NULL;
 
-// Function prototypes
-void create_linkedList();
-void print_linkedList();
-void addElement();
-void insertBeginning();
-void insertEnd();
-void insertMiddle();
-void deleteElement();
-void deleteBeginning();
-void deleteEnd();
-void deleteMiddle();
-void deletebyElement();
-int listSize();
-
-// Create a linked list
 void create_linkedList() {
-    struct node *nodeInstance = (struct node *)malloc(sizeof(struct node));
     char choice;
-    do{
-    printf("Enter data to continue: ");
-    scanf("%d", &nodeInstance->data);
-    nodeInstance->next = NULL;
-
-    if (head != NULL) {
-        prev->next = nodeInstance;
-    } else {
-        head = nodeInstance;
+        do{
+            struct node *nodeInstance = (struct node *)malloc(sizeof(struct node));
+            if(nodeInstance){
+                printf("Enter data\n");
+                scanf("%d",&nodeInstance->data);
+                nodeInstance->next = NULL;
+                //*To check
+                 if(head!=NULL){
+                   prev->next = nodeInstance;
+                 }
+                 else{
+                     head = nodeInstance;
+                 }
+                 prev = nodeInstance;
+               // */;
+            }
+            else{
+                printf("Memory Not alloted\n");
+                return;
+            }
+            printf("Do you want to insert another element y or n\n");
+            while(getchar()!='\n');
+            scanf("%c",&choice);
+        } while (choice == 'y' || choice == 'Y');
     }
-    prev = nodeInstance;
 
-    printf("Add another element (Y/N): ");
-    scanf(" %c", &choice);
-    }while(choice=="y"||choice == 'Y');
-}
-// Print the linked list
 void print_linkedList() {
     struct node *nodeInstance = head;
-
     if (head == NULL) {
         printf("LinkedList is empty.\n");
         return;
     }
-
-    printf("Linked List: ");
+    printf("Linked List:\n");
     while (nodeInstance != NULL) {
-        printf("%d -> ", nodeInstance->data);
+        printf("%d ->%p\n", nodeInstance->data,nodeInstance->next);
         nodeInstance = nodeInstance->next;
     }
-    printf("NULL\n");
 }
 
-// Add element menu
 void addElement() {
     int choice;
     printf("\nEnter where you want to add an element:\n");
     printf("1. Beginning\n2. In Middle by Position\n3. At End\n");
     printf("Your choice: ");
     scanf("%d", &choice);
-
     switch (choice) {
         case 1:
             insertBeginning();
@@ -84,36 +72,29 @@ void addElement() {
     print_linkedList();
 }
 
-// Insert at beginning
 void insertBeginning() {
     struct node *nodeInstance = (struct node *)malloc(sizeof(struct node));
     printf("Enter data to be inserted: ");
     scanf("%d", &nodeInstance->data);
-
     nodeInstance->next = head;
     head = nodeInstance;
 }
 
-// Insert at end
 void insertEnd() {
     struct node *nodeInstance = (struct node *)malloc(sizeof(struct node));
     printf("Enter data to be inserted: ");
     scanf("%d", &nodeInstance->data);
     nodeInstance->next = NULL;
-
     if (head == NULL) {
         head = nodeInstance;
         return;
     }
-
     struct node *current = head;
     while (current->next != NULL) {
         current = current->next;
     }
     current->next = nodeInstance;
 }
-
-// Insert in the middle by position
 void insertMiddle() {
     int position;
     printf("Enter position to insert: ");
@@ -123,7 +104,6 @@ void insertMiddle() {
         printf("Invalid position!\n");
         return;
     }
-
     struct node *nodeInstance = (struct node *)malloc(sizeof(struct node));
     printf("Enter data to be inserted: ");
     scanf("%d", &nodeInstance->data);
@@ -133,7 +113,6 @@ void insertMiddle() {
         head = nodeInstance;
         return;
     }
-
     struct node *current = head;
     for (int i = 1; i < position - 1; i++) {
         current = current->next;
@@ -141,8 +120,6 @@ void insertMiddle() {
     nodeInstance->next = current->next;
     current->next = nodeInstance;
 }
-
-// Delete element menu
 void deleteElement() {
     int choice;
     printf("\nEnter where you want to delete an element:\n");
@@ -169,7 +146,7 @@ void deleteElement() {
     print_linkedList();
 }
 
-// Delete at beginning
+
 void deleteBeginning() {
     if (head == NULL) {
         printf("LinkedList is empty.\n");
@@ -181,19 +158,17 @@ void deleteBeginning() {
     free(current);
 }
 
-// Delete at end
+
 void deleteEnd() {
     if (head == NULL) {
         printf("LinkedList is empty.\n");
         return;
     }
-
     if (head->next == NULL) {
         free(head);
         head = NULL;
         return;
     }
-
     struct node *current = head;
     while (current->next->next != NULL) {
         current = current->next;
@@ -202,7 +177,6 @@ void deleteEnd() {
     current->next = NULL;
 }
 
-// Delete in the middle by position
 void deleteMiddle() {
     int position;
     printf("Enter position to delete: ");
@@ -217,7 +191,6 @@ void deleteMiddle() {
         deleteBeginning();
         return;
     }
-
     struct node *current = head;
     for (int i = 1; i < position - 1; i++) {
         current = current->next;
@@ -228,7 +201,6 @@ void deleteMiddle() {
     free(temp);
 }
 
-// Delete by searching for an element
 void deletebyElement() {
     int key;
     printf("Enter element to delete: ");
@@ -256,8 +228,6 @@ void deletebyElement() {
         free(current);
     }
 }
-
-// Get the size of the linked list
 int listSize() {
     struct node *current = head;
     int count = 0;
@@ -268,32 +238,105 @@ int listSize() {
     }
     return count;
 }
+void convertSingletoCircularLinkedList(){
+    struct node *current = head;
+    while(current->next){
+        current = current->next;
+    }
+    current->next = head;
+    return;
+}
+void printCircularLinkedList(){
+    struct node *current = head;
+    printf("CircularLinkedList Elements are :\nHead %p\n",head);
+    do{
+        printf("%d->%p\n",current->data,current->next);
+        current = current->next;
+    }while(current!=head);
+    return;
+}
+/* Algorithm for reversing linnkedlist - Iterative Approach
+Initialize three pointers:
+    prev_rev to keep track of the previous node, initially NULL,
+    current to traverse the list, initially pointing to the head,
+    next_rev to temporarily store the next node.
+Traverse the list:
+    While current is not NULL:
+        Save the next node: next = current->next.
+        Reverse the link: current->next = prev.
+        Move prev and current one step forward:
+        prev = current
+        current = next
+Update the head:
+After the loop, prev will be pointing to the new head. Assign it to the head of the list.
+Here I am providing this function as option. So assigning the new head revHead.
+Else assign the prev_rev to head.
+*/
+void reverseLinkedList_iterative() {
+    struct node *prev_rev = NULL;
+    struct node *current = head;
+    struct node *next_rev = NULL;
 
-// Main function
+    while (current != NULL) {
+        next_rev = current->next;   
+        current->next = prev_rev;  
+        prev_rev = current;        
+        current = next_rev;       
+    }
+    struct node *revHead = prev_rev;
+    printf("Reversed Elements:\n");
+    while (revHead != NULL) {
+        printf("%d -> %p\n", revHead->data, (void *)revHead->next);
+        revHead = revHead->next;
+    }
+}
+struct node* reverseLinkedList_recursive(struct node *current){
+    if(current == NULL){
+        printf("LinkedList not Initialized\n");
+        return;
+    }
+    if(current->next==NULL){
+        return current;
+    }
+    struct node *head_rr = reverseLinkedList_recursive(current->next);
+    current->next->next = current;
+    current->next = NULL;
+    return head_rr;
+}
+void print_linkedList_recursion(struct node *head_rr){
+    printf("LinkedList reversed in recursive fashion\n");
+    struct node *current = head_rr;
+    while(current){
+        printf("%d->%p",current->data,current->next);
+        current = current->next;
+    }
+}
 int main() {
+    create_linkedList();
+    print_linkedList();
     int choice;
-
     while (1) {
         printf("\nMenu:\n");
-        printf("1. Create Linked List\n2. Print Linked List\n3. Add Element\n4. Delete Element\n5. Exit\n");
+        printf("1. Add Element\n2. Delete Element\n3.Convert Single to CircularLinkedList\n4.Reverse a LinkedList - Iterative\n5.Reverse LinkedList - Recursive\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
-
         switch (choice) {
             case 1:
-                create_linkedList();
-                break;
-            case 2:
-                print_linkedList();
-                break;
-            case 3:
                 addElement();
                 break;
-            case 4:
+            case 2:
                 deleteElement();
                 break;
+            case 3:
+                convertSingletoCircularLinkedList();
+                printCircularLinkedList();
+            case 4:
+                reverseLinkedList_iterative();
             case 5:
-                printf("Exiting program.\n");
+                struct node *head_r = reverseLinkedList_recursive(&head);
+                print_linkedList_recursion(head_r);
+            case 6:
+                printf("\nExiting program.\n");
                 return 0;
             default:
                 printf("Invalid choice. Try again.\n");
