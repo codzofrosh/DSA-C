@@ -77,5 +77,34 @@ int main()
     for(int i=0;i<2;i++){
         printf("Age %d\nName %s\nMark %f\n",data3[i].age,data3[i].name,data3[i].mark);
     }
+    typedef struct 
+    {
+        data structMember;
+    }structData;
+    structData member;
+    member.structMember.age = 10;
+    typedef union{
+        int a[10];
+        char *b;
+        float c;
+    }unionData;
+    printf("Size of struct %d\t Size of Union %d\n",sizeof(structData),sizeof(unionData));
+    unionData dataUnion;
+    dataUnion.b = "Hello from Union";
+    printf("Union data %s\n",dataUnion.b);
+    dataUnion.c = 3.14;
+    printf("Union data %f\n",dataUnion.c);
+    dataUnion.a[5] = 100;
+    printf("Union data %d\n",dataUnion.a[5]);
+    //Below printf won't work. As in union only one member can be stored at a time. Only the last updated thing will be present.
+    printf("Union Data's\n %s\t%d\t%f",dataUnion.b,dataUnion.a[5],dataUnion.c);
+    //BitFields in structures allow to define the exact number of bits each field will occupy, 
+    //providing a way to efficiently manage memory when dealing with small data.
+    typedef struct 
+    {
+       unsigned int length:8;
+       unsigned int breadth:8;
+    };
+    
     return 0;
 }
