@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<ctype.h>
 char content[100],filename[20],appendContent[100],receivedContent[100],dstFileName[20];
 int key;
 void readFile(const char *filename){
@@ -103,6 +104,25 @@ void decrypt(){
     printf("Encrypted file not opened\n");
     return;
 }
+void wordSearch(const char *filename){
+    FILE *filePtr;
+    receivedContent[0] = '\0';
+    filePtr = fopen(filename,"r");
+    if(filePtr){
+        char key;
+        printf("Enter keyword to search\n");
+        scanf(" %c",&key);
+        while(fscanf(filePtr,"%s",receivedContent)!=EOF){
+            if(toupper(receivedContent[0])==toupper(key)){
+                printf("%s\n",receivedContent);
+            }
+        }
+        fclose(filePtr);
+        return;
+    }
+    printf("Error in opening file\n");
+    return;
+}
 int main(){
     FILE *filePtr;
     printf("Enter Filename\n");
@@ -137,5 +157,5 @@ int main(){
     copy(filename);
     encrypt(dstFileName);
     decrypt(key);
-    //wordSearch(filename);
+    wordSearch(filename);
 }
